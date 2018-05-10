@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+
+		<title>Чат</title>
+		
+		
+		
+	<style>
+	
+	#messages {
+		outline:1px solid red;
+		width:80%;
+		margin:0px auto;
+		color:blue;
+		padding:10px;
+		min-height:70vh;
+		overflow:auto;
+	}
+	
+	
+	.box {
+		width:80%;
+		border:1px solid green;
+		position:fixed;
+		bottom:0;
+		left:9%;
+		padding:20px;
+		margin-bottom:20px;
+		background-color:#607D8B;
+	}
+	
+	
+	.box input {
+		height:25px;
+	}
+	
+	#text {
+		width:70%;
+	}
+	
+	#submit {
+		background-color:#00BCD4;
+		border:none;
+		height:30px;
+		color:white;
+		font-size:20px;
+		vertical-align:middle;
+	}
+	
+	</style>
+		
+	</head>
+<body>
+	
+<div id="messages" > 
+
+</div>
+
+
+<div class="box" >
+	<form name="publish" >
+		<input type="text" id="text">
+		<input type="submit" id="submit" value="Отправить сообщение" >
+	</form>
+</div>
+	
+<script>
+	
+	var conn = new WebSocket('ws://127.0.0.1:8080');
+	
+	var submit = document.getElementById('submit');
+	var text = document.getElementById('text');
+	var box = document.getElementById('box');
+	var messages = document.getElementById('messages');
+	
+	// отправить сообщение из формы publish
+document.forms.publish.onsubmit = function() {
+  var outgoingMessage = this.text.value;
+
+  conn.send(outgoingMessage);
+  return false;
+};
+
+	
+	
+	
+	conn.onopen = function(e) {
+    console.log("Connection established!");
+	};
+
+	conn.onmessage = function(e) {
+		   messages.innerHTML =	messages.innerHTML += '<br>' + e.data;
+	};
+	
+	conn.send('Hello World!');
+</script>	
+</body>
+</html>
